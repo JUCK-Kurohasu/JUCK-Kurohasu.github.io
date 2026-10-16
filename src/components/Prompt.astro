@@ -1,0 +1,12 @@
+---
+/** プロンプト表示（juck@kurohasu:~$） */
+import { profile } from '../data/profile';
+
+interface Props {
+  path?: string;
+}
+
+const { path = '~' } = Astro.props;
+---
+
+<span class="prompt"><span class="p-user">{profile.user}@{profile.host}</span><span class="p-sep">:</span><span class="p-path">{path}</span><span class="p-sym">$</span></span>

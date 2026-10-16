@@ -1,0 +1,363 @@
+/*
+ * 対話型ターミナルのスタイル。
+ * 出力は JS で動的に生成されるため、Astro のスコープ付きスタイルではなくグローバル CSS にしている。
+ */
+
+.term {
+  overflow: hidden;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--term-bg) 94%, transparent);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.5),
+    0 30px 80px -30px color-mix(in oklab, var(--accent) 40%, transparent),
+    inset 0 1px 0 rgb(255 255 255 / 0.03);
+}
+
+/* ---- タイトルバー ---- */
+.term-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(var(--bg-3), var(--bg-2));
+  color: var(--fg-3);
+  font-size: 0.78rem;
+  user-select: none;
+}
+
+.term-dots {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.term-dots i {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--line-2);
+}
+
+.term-dots i:nth-child(1) {
+  background: var(--accent-2);
+}
+.term-dots i:nth-child(2) {
+  background: var(--accent);
+}
+.term-dots i:nth-child(3) {
+  background: var(--accent-3);
+}
+
+.term-title {
+  flex: 1;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.term-size {
+  min-width: 6ch;
+  text-align: right;
+}
+
+/* ---- 画面 ---- */
+.term-screen {
+  height: min(78vh, 720px);
+  min-height: 440px;
+  padding: 1rem 1.15rem 1.25rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  container-type: inline-size;
+  scrollbar-color: var(--line-2) transparent;
+  scrollbar-width: thin;
+}
+
+@media (max-width: 640px) {
+  .term-screen {
+    height: 72svh;
+    min-height: 380px;
+    padding: 0.8rem 0.75rem 1rem;
+  }
+}
+
+/* JS 無効時は高さ固定をやめて全文を表示する */
+html:not(.js) .term-screen {
+  height: auto;
+  min-height: 0;
+}
+
+/* ---- 起動ログ ---- */
+.term-boot .ln {
+  color: var(--fg-2);
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+
+/* 起動演出中は静的な内容と入力欄を隠す（万一 JS が止まっても 4 秒後には表示） */
+html[data-boot] .term-static,
+html[data-boot] .term-input {
+  visibility: hidden;
+  animation: boot-failsafe 0s 4s forwards;
+}
+
+@keyframes boot-failsafe {
+  to {
+    visibility: visible;
+  }
+}
+
+/* ---- 静的な内容（バナー + MOTD） ---- */
+.term-static {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem 2.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.hero-fox {
+  color: var(--accent);
+  font-size: 11px;
+  filter: drop-shadow(0 0 10px color-mix(in oklab, var(--accent) 45%, transparent));
+}
+
+@container (max-width: 760px) {
+  .term-static {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hero-fox {
+    display: none;
+  }
+}
+
+.tagline {
+  margin: 0.9rem 0 0;
+  color: var(--accent-2);
+  font-weight: 700;
+  text-shadow: var(--glow);
+}
+
+.motd {
+  margin-top: 1rem;
+  color: var(--fg-2);
+  font-size: 0.92rem;
+}
+
+.motd p {
+  margin: 0 0 0.35rem;
+}
+
+.motd ul {
+  margin: 0.5rem 0 0.8rem;
+  padding: 0;
+  list-style: none;
+}
+
+.motd li::before {
+  content: ' * ';
+  color: var(--fg-3);
+  white-space: pre;
+}
+
+.motd .label {
+  display: inline-block;
+  min-width: 10ch;
+  color: var(--fg-3);
+}
+
+/* ---- 出力 ---- */
+.term-output .ln {
+  min-height: 1.7em;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.term-output .ln-cmd {
+  margin-top: 0.35rem;
+}
+
+.term-output .art {
+  margin: 0.4rem 0;
+  overflow-x: auto;
+}
+
+.run {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  text-decoration: underline dotted;
+  text-underline-offset: 0.25em;
+  cursor: pointer;
+}
+
+.run:hover {
+  color: var(--accent-2);
+  text-decoration-style: solid;
+}
+
+/* neofetch */
+.nf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem 3ch;
+  margin: 0.5rem 0;
+}
+
+.nf-logo {
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.nf-info {
+  min-width: min(100%, 32ch);
+}
+
+/* カラーパレット表示（neofetch の色見本） */
+.c-p0 {
+  color: var(--bg-3);
+}
+.c-p1 {
+  color: var(--err);
+}
+.c-p2 {
+  color: var(--ok);
+}
+.c-p3 {
+  color: var(--warn);
+}
+.c-p4 {
+  color: var(--info);
+}
+.c-p5 {
+  color: var(--accent);
+}
+.c-p6 {
+  color: var(--accent-2);
+}
+.c-p7 {
+  color: var(--fg);
+}
+
+/* theme コマンドの色見本（各テーマのアクセント色） */
+.sw-violet {
+  color: #b77dff;
+}
+.sw-neon {
+  color: #ff3dbb;
+}
+.sw-lavender {
+  color: #cdb4ff;
+}
+.sw-ultraviolet {
+  color: #9d6bff;
+}
+
+/* ---- 入力行 ---- */
+.term-input {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6ch;
+  min-height: 2.75rem;
+  margin: 0.35rem -0.4rem 0;
+  padding: 0.3rem 0.4rem;
+  border-radius: 6px;
+}
+
+.term-input:focus-within {
+  background: color-mix(in oklab, var(--accent) 7%, transparent);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+.term-input .prompt {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.term-input input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  caret-color: var(--accent-2);
+}
+
+.term-input input:focus-visible {
+  outline: none;
+}
+
+@media (max-width: 400px) {
+  .term-input .p-user {
+    display: none;
+  }
+}
+
+/* ---- コマンドのチップ（モバイル向けのタップ実行） ---- */
+.term-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  min-height: 2.25rem;
+  padding: 0.2rem 0.85rem;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: var(--bg-2);
+  color: var(--fg-2);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
+}
+
+.chip::before {
+  content: '$ ';
+  color: var(--fg-3);
+}
+
+.chip:hover {
+  border-color: var(--accent);
+  color: var(--fg);
+  box-shadow: var(--glow);
+}
+
+html:not(.js) .term-chips,
+html:not(.js) .term-input {
+  display: none;
+}
+
+.noscript-note {
+  margin: 0.75rem 0 0;
+  color: var(--warn);
+  font-size: 0.85rem;
+}
+
+/* ---- matrix ---- */
+.matrix-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 85;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.92;
+  transition: opacity 0.4s;
+}
+
+.matrix-canvas.is-leaving {
+  opacity: 0;
+}

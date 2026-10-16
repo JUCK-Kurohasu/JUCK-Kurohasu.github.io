@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Prompt from '../../components/Prompt.astro';
+import ZennNotice from '../../components/ZennNotice.astro';
+import { formatDate, getMemos, memoUrl } from '../../lib/memos';
+import { url } from '../../lib/url';
+
+const memos = await getMemos();
+---
+
+<BaseLayout title="memos" description="技術メモの一覧（CTF の Writeup は Zenn で公開しています）" current="memos">
+  <main id="main" class="wrap">
+    <section class="panel" aria-labelledby="memos-title">
+      <h1 id="memos-title" class="panel-title"><span class="panel-num">5</span>memos</h1>
+      <span class="panel-meta">{memos.length} memos</span>
+      <p class="panel-cmd" aria-hidden="true"><Prompt path="~/memos" /> ls -lt</p>
+      <ZennNotice />
+      {
+        memos.length === 0 ? (
+          <p class="c-dim">（まだメモはありません）</p>
+        ) : (
+          <ul class="posts">
+            {memos.map((memo) => (
+              <li>
+                <time datetime={memo.data.date.toISOString()}>{formatDate(memo.data.date)}</time>
+                <a class="post-title" href={memoUrl(memo)}>
+                  {memo.data.title}
+                  {memo.data.draft && <span class="c-warn"> [draft]</span>}
+                </a>
+                <p class="post-desc">{memo.data.description}</p>
+                {memo.data.tags.length > 0 && (
+                  <ul class="tags" aria-label="タグ">
+                    {memo.data.tags.map((t) => (
+                      <li>{t}</li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+      <p class="more">→ <a href={url()}>cd ~</a> · <a href={url('rss.xml')}>rss.xml</a></p>
+    </section>
+  </main>
+</BaseLayout>

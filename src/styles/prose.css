@@ -1,0 +1,153 @@
+/* メモ本文（Markdown）のスタイル。見出しには Markdown 記法の記号を添えて CLI らしくする */
+
+.prose {
+  max-width: 78ch;
+  font-size: 0.95rem;
+  line-height: 1.85;
+}
+
+.prose > * + * {
+  margin-top: 1.1em;
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  margin: 2.2em 0 0.6em;
+  color: var(--accent);
+  text-shadow: var(--glow);
+}
+
+.prose h2 {
+  padding-bottom: 0.3em;
+  border-bottom: 1px dashed var(--line-2);
+  font-size: 1.2rem;
+}
+
+.prose h3 {
+  font-size: 1.05rem;
+}
+
+.prose h4 {
+  font-size: 1rem;
+}
+
+.prose h2::before,
+.prose h3::before,
+.prose h4::before {
+  color: var(--fg-3);
+  font-weight: 400;
+  text-shadow: none;
+}
+
+.prose h2::before {
+  content: '## ';
+}
+.prose h3::before {
+  content: '### ';
+}
+.prose h4::before {
+  content: '#### ';
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  margin-bottom: 0;
+}
+
+.prose ul {
+  padding-left: 2.5ch;
+  list-style-type: '- ';
+}
+
+.prose ul ::marker {
+  color: var(--accent-2);
+}
+
+.prose ol {
+  padding-left: 3ch;
+}
+
+.prose li + li {
+  margin-top: 0.25em;
+}
+
+.prose strong {
+  color: var(--accent-2);
+}
+
+.prose :not(pre) > code {
+  padding: 0.1em 0.4em;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--bg-3);
+  color: var(--ok);
+  font-size: 0.9em;
+}
+
+.prose pre {
+  position: relative;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+/* Shiki の出力（data-language 属性）に言語名を表示 */
+.prose pre[data-language]::before {
+  content: attr(data-language);
+  position: absolute;
+  top: 0.35rem;
+  right: 0.6rem;
+  color: var(--fg-3);
+  font-size: 0.72rem;
+  text-transform: lowercase;
+}
+
+.prose blockquote {
+  margin-inline: 0;
+  padding: 0.4em 1.2em;
+  border-left: 3px solid var(--accent);
+  background: color-mix(in oklab, var(--accent) 7%, transparent);
+  color: var(--fg-2);
+}
+
+.prose blockquote p {
+  margin: 0;
+}
+
+.prose table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.prose th,
+.prose td {
+  padding: 0.45em 0.9em;
+  border: 1px solid var(--line-2);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  background: var(--bg-3);
+  color: var(--accent);
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px dashed var(--line-2);
+}
+
+.prose img {
+  height: auto;
+  border: 1px solid var(--line-2);
+  border-radius: 6px;
+}

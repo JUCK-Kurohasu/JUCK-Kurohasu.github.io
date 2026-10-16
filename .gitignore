@@ -1,0 +1,25 @@
+# ビルド成果物
+dist/
+.astro/
+
+# 依存パッケージ
+node_modules/
+
+# ログ
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 環境変数（秘密情報をコミットしない）
+.env
+.env.*
+!.env.example
+
+# OS / エディタ
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/*
+!.vscode/extensions.json

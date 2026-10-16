@@ -1,0 +1,83 @@
+---
+/**
+ * 全ページ共通のレイアウト
+ * - <meta> による CSP（本番ビルドのみ。開発サーバーは Vite がインラインスクリプトを使うため付けない）
+ * - フォントの読み込み、OGP、tmux 風ステータスバー、CRT エフェクト
+ */
+import '@fontsource-variable/m-plus-1-code';
+import '../styles/fonts.css';
+import '../styles/global.css';
+import fontUrl from '../assets/fonts/jetbrains-mono-subset.woff2?url';
+import StatusBar from '../components/StatusBar.astro';
+import Footer from '../components/Footer.astro';
+import { profile } from '../data/profile';
+import { buildCsp, HEAD_SCRIPT } from '../lib/csp';
+import { url } from '../lib/url';
+
+interface Props {
+  /** ページ固有のタイトル（未指定ならサイト名のみ） */
+  title?: string;
+  description?: string;
+  /** ステータスバーで強調するウィンドウ */
+  current?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  /** 記事ページで q キーを押したときの戻り先 */
+  pagerBack?: string;
+}
+
+const { title, description = profile.description, current = 'home', ogType = 'website', noindex = false, pagerBack } =
+  Astro.props;
+
+const siteName = `${profile.handle} — ${profile.tagline}`;
+const pageTitle = title ? `${title} | ${profile.handle}` : siteName;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(url('og.png'), Astro.site).href;
+const csp = import.meta.env.PROD ? buildCsp() : null;
+const xHandle = profile.links.find((l) => l.id === 'x')?.text;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    {csp && <meta http-equiv="Content-Security-Policy" content={csp} />}
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0a0710" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${profile.handle} memos`} href={url('rss.xml')} />
+    <link rel="sitemap" href={url('sitemap-index.xml')} />
+    <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {xHandle && <meta name="twitter:site" content={xHandle} />}
+
+    <script is:inline set:html={HEAD_SCRIPT} />
+    <slot name="head" />
+  </head>
+  <body data-pager-back={pagerBack}>
+    <a class="skip-link" href="#main">本文へスキップ</a>
+    <slot />
+    <Footer />
+    <StatusBar current={current} />
+    <div class="crt" aria-hidden="true"></div>
+    <script>
+      import '../scripts/site.ts';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+---
+import Panel from '../Panel.astro';
+import ZennNotice from '../ZennNotice.astro';
+import { formatDate, memoUrl, type Memo } from '../../lib/memos';
+import { url } from '../../lib/url';
+
+interface Props {
+  memos: Memo[];
+}
+
+const { memos } = Astro.props;
+---
+
+<Panel id="memos" index={5} title="memos" command="ls -t ~/memos | head" class="panel--5" meta={`${memos.length} memos`}>
+  <ZennNotice />
+  {
+    memos.length === 0 ? (
+      <p class="c-dim">（まだメモはありません）</p>
+    ) : (
+      <ul class="posts">
+        {memos.slice(0, 5).map((memo) => (
+          <li>
+            <time datetime={memo.data.date.toISOString()}>{formatDate(memo.data.date)}</time>
+            <a class="post-title" href={memoUrl(memo)}>
+              {memo.data.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <p class="more">
+    → <a href={url('memos/')}>cd ~/memos</a> · <a href={url('rss.xml')}>rss.xml</a>
+  </p>
+</Panel>

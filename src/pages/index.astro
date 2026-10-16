@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Terminal from '../components/Terminal.astro';
+import About from '../components/sections/About.astro';
+import Skills from '../components/sections/Skills.astro';
+import Projects from '../components/sections/Projects.astro';
+import Activity from '../components/sections/Activity.astro';
+import Memos from '../components/sections/Memos.astro';
+import Contact from '../components/sections/Contact.astro';
+import { formatDate, getMemos, memoUrl } from '../lib/memos';
+import type { PostSummary } from '../scripts/terminal/types';
+
+const memos = await getMemos();
+const summaries: PostSummary[] = memos.map((p) => ({
+  id: p.id,
+  title: p.data.title,
+  date: formatDate(p.data.date),
+  url: memoUrl(p),
+  tags: p.data.tags,
+  category: p.data.category,
+}));
+---
+
+<BaseLayout current="home">
+  <!-- view-source を開いたあなたへ: ターミナルで "ls -a" を試してみてください。 -->
+  <main id="main" class="wrap">
+    <Terminal posts={summaries} />
+    <div class="panels">
+      <About />
+      <Skills />
+      <Projects />
+      <Activity />
+      <Memos memos={memos} />
+      <Contact />
+    </div>
+  </main>
+</BaseLayout>

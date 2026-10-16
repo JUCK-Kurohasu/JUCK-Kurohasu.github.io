@@ -1,0 +1,60 @@
+---
+import { Image } from 'astro:assets';
+import Panel from '../Panel.astro';
+import avatar from '../../assets/images/avatar.jpg';
+import { profile } from '../../data/profile';
+---
+
+<Panel id="about" index={1} title="about" command="cat ~/about.md">
+  <div class="about-grid">
+    <div class="about-main">
+      <div class="about-head">
+        <figure class="avatar">
+          <Image src={avatar} alt={`${profile.handle} のアイコン（狐）`} width={128} height={128} densities={[1, 2]} />
+          <figcaption>~/avatar.jpg</figcaption>
+        </figure>
+        <div class="about-id">
+          <p class="about-name"><span class="c-acc c-b c-glow">{profile.handle}</span> <span class="c-dim">({profile.alias})</span></p>
+          <p class="c-acc2 c-b">&gt; {profile.tagline}</p>
+          <p class="about-univ"><span class="c-dim">@ </span>{profile.university}<span class="c-dim"> — {profile.faculty}</span></p>
+        </div>
+      </div>
+      {profile.bio.map((p) => <p>{p}</p>)}
+    </div>
+
+    <div class="about-side">
+      <h3 class="about-sub about-sub--first"><span class="c-dim">$ </span>ls ~/communities</h3>
+      <ul class="communities">
+        {
+          profile.communities.map((c) => (
+            <li>
+              <span class="role">[{c.role}]</span>{' '}
+              <a href={c.url} target="_blank" rel="noopener noreferrer">
+                {c.name}
+              </a>{' '}
+              <span class="c-dim">{c.handle}</span>
+              <span class="desc">{c.description}</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <dl class="kv">
+        <dt>university</dt>
+        <dd>{profile.university}</dd>
+        <dt>high school</dt>
+        <dd>{profile.highSchool}</dd>
+        <dt>birthday</dt>
+        <dd><time datetime={profile.birthday}>{profile.birthday}</time></dd>
+        <dt>ctf</dt>
+        <dd>{profile.ctfGenres.join(' / ')}</dd>
+        <dt>languages</dt>
+        <dd><span class="c-acc2 c-b c-glow">{profile.languages[0]}</span> &lt;3, {profile.languages.slice(1).join(', ')}</dd>
+        <dt>interests</dt>
+        <dd>{profile.interests.join(', ')}</dd>
+        <dt>location</dt>
+        <dd>{profile.location}</dd>
+      </dl>
+    </div>
+  </div>
+</Panel>

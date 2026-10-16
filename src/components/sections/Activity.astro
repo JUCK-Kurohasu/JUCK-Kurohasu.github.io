@@ -1,0 +1,26 @@
+---
+import Panel from '../Panel.astro';
+import { activities } from '../../data/activity';
+---
+
+<Panel id="activity" index={4} title="activity" command="tail ~/activity.log" class="panel--7">
+  <ol class="log">
+    {
+      activities.map((a) => (
+        <li>
+          <time datetime={a.date}>{a.date}</time>
+          <span class="kind">[{a.kind}]</span>
+          <span class="text">
+            {a.url ? (
+              <a href={a.url} target="_blank" rel="noopener noreferrer">
+                {a.text}
+              </a>
+            ) : (
+              a.text
+            )}
+          </span>
+        </li>
+      ))
+    }
+  </ol>
+</Panel>

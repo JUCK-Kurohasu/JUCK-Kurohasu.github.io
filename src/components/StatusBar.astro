@@ -1,0 +1,38 @@
+---
+/** tmux 風のステータスバー（セクションへのナビゲーション）。0〜6 キーでも移動できる */
+import { profile } from '../data/profile';
+import { url } from '../lib/url';
+
+interface Props {
+  current?: string;
+}
+
+const { current = 'home' } = Astro.props;
+
+const windows = ['home', 'about', 'skills', 'projects', 'activity', 'memos', 'contact'];
+---
+
+<nav class="statusbar" aria-label="セクション">
+  <a class="sb-session" href={url()} title="トップへ">[{profile.user}]</a>
+  <ol class="sb-windows">
+    {
+      windows.map((id, i) => (
+        <li>
+          <a
+            href={url(`#${id}`)}
+            data-window={id}
+            data-key={String(i)}
+            aria-current={id === current ? 'true' : undefined}
+            aria-keyshortcuts={String(i)}
+          >
+            {i}:{id}
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+  <div class="sb-right">
+    <span class="sb-love">&lt;3 F#</span>
+    <time data-clock></time>
+  </div>
+</nav>

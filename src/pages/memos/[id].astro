@@ -1,0 +1,55 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Prompt from '../../components/Prompt.astro';
+import { formatDate, getMemos, type Memo } from '../../lib/memos';
+import { url } from '../../lib/url';
+import '../../styles/prose.css';
+
+export async function getStaticPaths() {
+  const memos = await getMemos();
+  return memos.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+interface Props {
+  post: Memo;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const { title, description, date, updated, tags, category, draft } = post.data;
+const back = url('memos/');
+---
+
+<BaseLayout title={title} description={description} current="memos" ogType="article" pagerBack={back} noindex={draft}>
+  <main id="main" class="wrap">
+    <article class="panel" aria-labelledby="post-title">
+      <span class="panel-title" aria-hidden="true"><span class="panel-num">5</span>memos</span>
+      <span class="panel-meta">{category}</span>
+      <p class="panel-cmd" aria-hidden="true"><Prompt path="~/memos" /> less {post.id}.md</p>
+      <header>
+        <h1 id="post-title" class="c-acc c-glow">{title}</h1>
+        <p class="c-dim">
+          <time datetime={date.toISOString()}>{formatDate(date)}</time>
+          {updated && <> · updated <time datetime={updated.toISOString()}>{formatDate(updated)}</time></>}
+          {draft && <span class="c-warn"> · [draft]</span>}
+        </p>
+        {
+          tags.length > 0 && (
+            <ul class="tags" aria-label="タグ">
+              {tags.map((t) => (
+                <li>{t}</li>
+              ))}
+            </ul>
+          )
+        }
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+      <p class="more">
+        <span class="c-acc">{post.id}.md (END)</span> — <kbd>q</kbd> で一覧へ戻る · <a href={back}>cd ..</a>
+      </p>
+    </article>
+  </main>
+</BaseLayout>

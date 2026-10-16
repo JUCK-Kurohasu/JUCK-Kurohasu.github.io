@@ -1,0 +1,29 @@
+---
+/**
+ * btop 風の枠付きパネル。1 行目に「このセクションを表示したコマンド」を出す。
+ */
+import Prompt from './Prompt.astro';
+
+interface Props {
+  id: string;
+  index: number;
+  title: string;
+  /** プロンプトに表示するコマンド（ASCII のみ。タイプ演出の桁数計算に使う） */
+  command: string;
+  /** 枠の右上に出す補足（件数など） */
+  meta?: string;
+  /** レイアウト用のクラス（panel--half など） */
+  class?: string;
+}
+
+const { id, index, title, command, meta, class: className } = Astro.props;
+---
+
+<section id={id} class:list={['panel', className]} aria-labelledby={`${id}-title`} tabindex="-1" data-panel>
+  <h2 id={`${id}-title`} class="panel-title"><span class="panel-num">{index}</span>{title}</h2>
+  {meta && <span class="panel-meta">{meta}</span>}
+  <p class="panel-cmd" aria-hidden="true">
+    <Prompt /> <span class="cmd" style={`--n:${command.length}`}>{command}</span>
+  </p>
+  <slot />
+</section>

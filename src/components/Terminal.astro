@@ -1,0 +1,112 @@
+---
+/**
+ * トップページの対話型ターミナル。
+ * JS が無効でもバナーと MOTD（各セクションへのリンク）は表示される。
+ */
+import '../styles/terminal.css';
+import { BANNER, FOX } from '../data/ascii';
+import { profile, promptId } from '../data/profile';
+import type { PostSummary } from '../scripts/terminal/types';
+import Prompt from './Prompt.astro';
+
+interface Props {
+  posts: PostSummary[];
+}
+
+const { posts } = Astro.props;
+const bannerCols = Math.max(...BANNER.split('\n').map((line) => line.length));
+
+/** MOTD に並べるショートカット: [ラベル, コマンド, JS 無効時のリンク先] */
+const motd: [label: string, cmds: [string, string][]][] = [
+  ['Profile', [['whoami', '#about'], ['neofetch', '#about'], ['skills', '#skills']]],
+  ['Projects', [['projects', '#projects'], ['activity', '#activity']]],
+  ['Memos', [['memos', '#memos'], ['writeups', '#memos']]],
+  ['Contact', [['contact', '#contact']]],
+];
+
+const chips = ['help', 'whoami', 'neofetch', 'projects', 'memos', 'nmap', 'matrix', 'theme'];
+---
+
+<section id="home" class="hero" aria-labelledby="hero-title" tabindex="-1" data-terminal data-posts={JSON.stringify(posts)}>
+  <h1 id="hero-title" class="visually-hidden">{profile.handle}（{profile.alias}）のポートフォリオ</h1>
+  <div class="term">
+    <div class="term-bar" aria-hidden="true">
+      <span class="term-dots"><i></i><i></i><i></i></span>
+      <span class="term-title">{promptId}: ~ — jsh</span>
+      <span class="term-size" data-term-size></span>
+    </div>
+
+    <div class="term-screen" data-term-screen>
+      <div class="term-boot" data-term-boot aria-hidden="true" hidden></div>
+
+      <div class="term-static" data-term-static>
+        <pre class="art hero-fox" aria-hidden="true">{FOX}</pre>
+        <div class="hero-main">
+          <pre class="art banner" style={`--cols:${bannerCols}`} data-text={BANNER} role="img" aria-label={profile.handle}>{BANNER}</pre>
+          <p class="tagline">&gt; {profile.tagline}</p>
+          <div class="motd">
+            <p>Welcome to KurohasuOS 6.6.6-purple (GNU/Linux x86_64)</p>
+            <ul>
+              {
+                motd.map(([label, cmds]) => (
+                  <li>
+                    <span class="label">{label}:</span>
+                    {cmds.map(([cmd, href], i) => (
+                      <>
+                        {i > 0 && ' / '}
+                        <a href={href} data-run={cmd}>
+                          {cmd}
+                        </a>
+                      </>
+                    ))}
+                  </li>
+                ))
+              }
+            </ul>
+            <p class="c-dim" data-last-login></p>
+            <p>
+              Type <a href="#about" data-run="help">help</a> to list commands. <kbd>Tab</kbd> で補完、<kbd>↑</kbd><kbd>↓</kbd> で履歴。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="term-output" data-term-output role="log" aria-live="polite" aria-label="コマンドの出力"></div>
+
+      <form class="term-input" data-term-form autocomplete="off">
+        <label for="term-input"><Prompt /></label>
+        <input
+          id="term-input"
+          type="text"
+          name="command"
+          data-term-input
+          autocomplete="off"
+          autocapitalize="off"
+          autocorrect="off"
+          spellcheck="false"
+          enterkeyhint="go"
+          aria-label="コマンドを入力"
+        />
+      </form>
+    </div>
+  </div>
+
+  <ul class="term-chips" aria-label="よく使うコマンド">
+    {
+      chips.map((cmd) => (
+        <li>
+          <button type="button" class="chip" data-run={cmd}>
+            {cmd}
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+  <noscript>
+    <p class="noscript-note">JavaScript が無効なため、対話型ターミナルは使えません。下の各セクションをご覧ください。</p>
+  </noscript>
+</section>
+
+<script>
+  import '../scripts/terminal/index.ts';
+</script>

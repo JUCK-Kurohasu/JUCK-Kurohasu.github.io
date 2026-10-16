@@ -1,0 +1,31 @@
+---
+import Panel from '../Panel.astro';
+import { flattenTree, skillTree } from '../../data/skills';
+
+// カテゴリ（ctf/・tools/ など）ごとに小さなツリーにして並べる
+const groups = skillTree.map((group) => {
+  const rows = flattenTree(group.children ?? []);
+  const width = Math.max(group.name.length, ...rows.map((r) => r.prefix.length + r.node.name.length)) + 1;
+  return { group, rows, width };
+});
+---
+
+<Panel id="skills" index={2} title="skills" command="tree ~/skills" meta={`${groups.length} dirs`}>
+  <div class="skill-groups">
+    {
+      groups.map(({ group, rows, width }) => (
+        <ul class="tree" style={`--w:${width}`}>
+          <li>
+            <span class="tree-node is-dir">~/skills/{group.name}</span>
+          </li>
+          {rows.map(({ prefix, node }) => (
+            <li>
+              <span class="tree-node"><span class="tree-prefix" aria-hidden="true">{prefix}</span><span class:list={[{ 'is-dir': node.name.endsWith('/'), 'is-fav': node.fav }]}>{node.name}</span></span>
+              {node.note && <span class="note"># {node.note}</span>}
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+</Panel>

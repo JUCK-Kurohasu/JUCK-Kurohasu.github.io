@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Prompt from '../components/Prompt.astro';
+import { NOT_FOUND } from '../data/ascii';
+import { url } from '../lib/url';
+---
+
+<BaseLayout title="404 Not Found" description="ページが見つかりません" current="" noindex>
+  <main id="main" class="wrap">
+    <section class="panel" aria-labelledby="nf-title">
+      <h1 id="nf-title" class="panel-title">404 not found</h1>
+      <p class="panel-cmd" aria-hidden="true"><Prompt /> cd <span data-missing-path>???</span></p>
+      <pre class="art banner" style="--cols:25" role="img" aria-label="404">{NOT_FOUND}</pre>
+      <p class="c-err">jsh: cd: no such file or directory</p>
+      <p class="c-warn">Segmentation fault (core dumped)</p>
+      <p>お探しのページは見つかりませんでした。URL を確認するか、トップに戻ってください。</p>
+      <p class="more">→ <a href={url()}>cd ~</a> · <a href={url('memos/')}>cd ~/memos</a></p>
+    </section>
+  </main>
+  <style>
+    .banner {
+      margin: 1.5rem 0;
+      font-size: clamp(8px, 3.2vw, 20px);
+    }
+  </style>
+</BaseLayout>

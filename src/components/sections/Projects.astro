@@ -1,0 +1,34 @@
+---
+import Panel from '../Panel.astro';
+import { projects } from '../../data/projects';
+---
+
+<Panel id="projects" index={3} title="projects" command="ls -l ~/projects" meta={`${projects.length} dirs`}>
+  <ul class="projects">
+    {
+      projects.map((p) => (
+        <li>
+          <article class:list={['project', { 'project--featured': p.featured }]}>
+            <div class="project-head">
+              <span class="project-perm" aria-hidden="true">
+                drwxr-xr-x
+              </span>
+              <span class="project-lang">{p.lang}</span>
+            </div>
+            <h3 class="project-name">
+              <a href={p.url} target="_blank" rel="noopener noreferrer">
+                {p.name}/
+              </a>
+            </h3>
+            <p>{p.description}</p>
+            <ul class="tags" aria-label="タグ">
+              {p.tags.map((t) => (
+                <li>{t}</li>
+              ))}
+            </ul>
+          </article>
+        </li>
+      ))
+    }
+  </ul>
+</Panel>

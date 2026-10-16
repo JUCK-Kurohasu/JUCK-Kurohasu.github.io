@@ -1,0 +1,22 @@
+# 依存関係と GitHub Actions の更新を週 1 回提案する。
+# 公開直後の版を避けるため 7 日間のクールダウンを置く（サプライチェーン攻撃対策）
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      astro:
+        patterns:
+          - astro
+          - '@astrojs/*'
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7

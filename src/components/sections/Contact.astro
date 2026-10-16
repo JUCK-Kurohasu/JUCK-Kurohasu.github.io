@@ -1,0 +1,23 @@
+---
+import Panel from '../Panel.astro';
+import { profile } from '../../data/profile';
+---
+
+<Panel id="contact" index={6} title="contact" command="./contact.sh">
+  <ul class="contact-list">
+    {
+      profile.links.map((l) => (
+        <li>
+          <span class="c-ok" aria-hidden="true">
+            [+]
+          </span>
+          <span class="label">{l.label}</span>
+          <a href={l.url} target="_blank" rel="noopener noreferrer me">
+            {l.text}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <p>{profile.contactNote}</p>
+</Panel>

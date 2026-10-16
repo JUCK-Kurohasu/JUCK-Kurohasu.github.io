@@ -1,0 +1,7 @@
+# 改行コードはリポジトリ内で LF に統一する（Windows の autocrlf 対策）
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff2 binary

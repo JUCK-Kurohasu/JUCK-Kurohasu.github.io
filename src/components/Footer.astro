@@ -1,0 +1,25 @@
+---
+import { profile } from '../data/profile';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer wrap">
+  <p class="c-dim">[process exited with code 0]</p>
+  <p>
+    &copy; {year} {profile.handle} · Built with Astro · no cookies / no trackers / no third-party requests
+  </p>
+  <p>
+    Fonts: JetBrains Mono / M PLUS 1 Code (SIL OFL 1.1)
+    {
+      profile.sourceUrl && (
+        <>
+          {' · '}
+          <a href={profile.sourceUrl} rel="noopener noreferrer" target="_blank">
+            source
+          </a>
+        </>
+      )
+    }
+  </p>
+</footer>
