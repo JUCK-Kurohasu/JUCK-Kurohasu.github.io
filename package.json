@@ -20,7 +20,7 @@
     "@astrojs/rss": "4.0.19",
     "@astrojs/sitemap": "3.7.4",
     "@fontsource-variable/m-plus-1-code": "5.3.0",
-    "astro": "7.3.8"
+    "astro": "7.4.0"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
