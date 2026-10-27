@@ -26,6 +26,11 @@ export const activities: Activity[] = [
     url: `${ZENN}/74c43f18838188`,
   },
   {
+    date: '2026-09',
+    kind: 'ctf',
+    text: 'Flare-On 13 — 9pt / 95th（ソロ）',
+  },
+  {
     date: '2026-08',
     kind: 'workshop',
     text: 'SECCON Beginners 2026 東京・大阪 — ワークショップ「アセンブリと解析をそれとなく理解する巻」を担当',
