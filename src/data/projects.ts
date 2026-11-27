@@ -22,6 +22,16 @@ const GH = 'https://github.com/JUCK-Kurohasu';
 
 export const projects: Project[] = [
   {
+    name: 'TOKIWA',
+    lang: 'Python',
+    summary: 'LLM エージェント駆動の SIEM・XDR',
+    description:
+      '生成 AI による攻撃の検知・防御を目的とした SIEM / XDR（開発中）。AI 攻撃の帰属判定、デコイによる欺瞞（Mirage）、リバースプロキシ型センサー（Gate）、Sigma・Suricata・Zeek の取り込み、人の承認を挟む LLM トリアージ、脆弱性インテリジェンスなどを備え、自分で管理するラボ環境での利用を想定しています。',
+    tags: ['siem', 'xdr', 'LLM', 'defense'],
+    url: `${GH}/TOKIWA`,
+    featured: true,
+  },
+  {
     name: 'pwntool.NET',
     lang: 'F#',
     summary: 'pwntools の .NET（F#）実装',
@@ -49,6 +59,15 @@ export const projects: Project[] = [
       'SECCON Beginners の Reversing ワークショップ向け講義資料（スライド）と演習問題 12 問。strings・XOR・関数チェーンなど、リバースエンジニアリングの基礎を段階的に学べる構成です。',
     tags: ['reversing', 'workshop', 'education'],
     url: `${GH}/SECCON_Beginner_CTF_2025_Reversing_Workshop`,
+  },
+  {
+    name: 'CTF_Agent',
+    lang: 'Python',
+    summary: 'CTF の問題難易度を採点する作問補助ツール',
+    description:
+      '作問の補助ツール。8 軸のルーブリックで問題の難易度を 0〜100 でスコア化（Warmup〜Insane）し、IRT（Rasch モデル）の校正でコンテストをまたいだ難易度比較を目指します。標準ライブラリのみで動作します。',
+    tags: ['ctf', 'authoring', 'python'],
+    url: `${GH}/CTF_Agent`,
   },
   {
     name: 'kyoto-mode',
